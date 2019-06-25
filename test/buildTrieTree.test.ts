@@ -34,5 +34,3 @@ test('union keyword', (t: ExecutionContext) => {
         }
     );
 });
-
-
