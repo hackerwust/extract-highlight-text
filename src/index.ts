@@ -9,7 +9,7 @@ export interface TextSliceItem {
     end: number;
 }
 
-export function buildTireTree (keywords: string[]): TrieNode {
+export function buildTrieTree (keywords: string[]): TrieNode {
     const rootNode: TrieNode = {};
     if (!keywords.length) {
         return rootNode;
@@ -38,10 +38,10 @@ function isEmptyTrieNode (node: TrieNode) {
     return true;
 }
 
-export default function sliceTextByKeywords ({ text, keywords, tireTreeRoot }: {
+export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot }: {
     text: string;
     keywords: string[];
-    tireTreeRoot?: TrieNode;
+    trieTreeRoot?: TrieNode;
 }): TextSliceItem[] {
     if (!text) {
         return [];
@@ -60,7 +60,7 @@ export default function sliceTextByKeywords ({ text, keywords, tireTreeRoot }: {
     let start = 0;
     // 上一次匹配终止下标，匹配到的字符串不包含text[lastMatchEnd]
     let lastMatchEnd = 0;
-    const rootNode: TrieNode = tireTreeRoot ? tireTreeRoot : buildTireTree(keywords);
+    const rootNode: TrieNode = trieTreeRoot ? trieTreeRoot : buildTrieTree(keywords);
     while (start < textLen) {
         let end = start;
         let curNode: TrieNode = rootNode;
