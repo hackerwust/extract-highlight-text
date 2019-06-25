@@ -17,6 +17,9 @@
     "esm/",
     "lib/"
   ],
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
