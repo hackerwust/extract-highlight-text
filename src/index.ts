@@ -1,5 +1,5 @@
-export interface TireNode {
-    [key: string]: TireNode;
+export interface TrieNode {
+    [key: string]: TrieNode;
 }
 
 export interface TextSliceItem {
@@ -9,12 +9,12 @@ export interface TextSliceItem {
     end: number;
 }
 
-export function buildTireTree (keywords: string[]): TireNode {
-    const rootNode: TireNode = {};
+export function buildTireTree (keywords: string[]): TrieNode {
+    const rootNode: TrieNode = {};
     if (!keywords.length) {
         return rootNode;
     }
-    let curNode: TireNode = rootNode;
+    let curNode: TrieNode = rootNode;
     // 遍历keywords数组，对每个keyword递归构造字典树
     for (let i = 0; i < keywords.length; i++) {
         const word: string = keywords[i];
@@ -31,7 +31,7 @@ export function buildTireTree (keywords: string[]): TireNode {
     return rootNode;
 }
 
-function isEmptyTireNode (node: TireNode) {
+function isEmptyTrieNode (node: TrieNode) {
     for (let i in node) {
         return false;
     }
@@ -41,7 +41,7 @@ function isEmptyTireNode (node: TireNode) {
 export default function sliceTextByKeywords ({ text, keywords, tireTreeRoot }: {
     text: string;
     keywords: string[];
-    tireTreeRoot?: TireNode;
+    tireTreeRoot?: TrieNode;
 }): TextSliceItem[] {
     if (!text) {
         return [];
@@ -60,10 +60,10 @@ export default function sliceTextByKeywords ({ text, keywords, tireTreeRoot }: {
     let start = 0;
     // 上一次匹配终止下标，匹配到的字符串不包含text[lastMatchEnd]
     let lastMatchEnd = 0;
-    const rootNode: TireNode = tireTreeRoot ? tireTreeRoot : buildTireTree(keywords);
+    const rootNode: TrieNode = tireTreeRoot ? tireTreeRoot : buildTireTree(keywords);
     while (start < textLen) {
         let end = start;
-        let curNode: TireNode = rootNode;
+        let curNode: TrieNode = rootNode;
         // 是否命中keyword字符串
         let matched = false;
         // 匹配到的keyword
@@ -74,7 +74,7 @@ export default function sliceTextByKeywords ({ text, keywords, tireTreeRoot }: {
                 end++;
                 curNode = curNode[char];
                 matchText += char;
-                if (isEmptyTireNode(curNode)) {
+                if (isEmptyTrieNode(curNode)) {
                     matched = true;
                 }
             } else {
