@@ -17,25 +17,36 @@ const result = sliceTextByKeywords({
 
 以上代码会输出如下内容， type为`highlight`表示匹配成功的子串
 ```js
- [ { type: 'normal', text: '床前', start: 0, end: 2 },
-  { type: 'highlight', text: '明月', start: 2, end: 4 },
-  { type: 'normal', text: '光，疑似', start: 4, end: 8 },
-  { type: 'highlight', text: '地上', start: 8, end: 10 },
-  { type: 'normal', text: '霜', start: 10, end: 11 } ]
+  [
+    { type: 'normal', text: '床前', start: 0, end: 2 },
+    { type: 'highlight', text: '明月', start: 2, end: 4 },
+    { type: 'normal', text: '光，疑似', start: 4, end: 8 },
+    { type: 'highlight', text: '地上', start: 8, end: 10 },
+    { type: 'normal', text: '霜', start: 10, end: 11 }
+  ]
 ```
 
 有时会对一批文本高亮同样的关键词组，可以先对关键字构造好字典树，避免匹配时多次重复构造，提高效率
 
 ```js
 import sliceTextByKeywords, { buildTrieTree } from 'extract-highlight-text';
-const title = '床前明月光，疑似地上霜';
+const title1 = '床前明月光，疑似地上霜';
+const title2 = '举头望明月，低头思故乡';
 const keywords = ['明月', '地上'];
 const trieTreeRoot = buildTrieTree(keywords);
-const result = sliceTextByKeywords({
-    text: title,
+
+const result1 = sliceTextByKeywords({
+    text: title1,
     keywords: keywords,
     trieTreeRoot: trieTreeRoot
 });
+
+const result2 = sliceTextByKeywords({
+    text: title2,
+    keywords: keywords,
+    trieTreeRoot: trieTreeRoot
+});
+```
 
 trieTreeRoot结构如下
 ```js
@@ -51,9 +62,19 @@ trieTreeRoot结构如下
 
 以上代码会输出如下内容， type为`highlight`表示匹配成功的子串
 ```js
- [ { type: 'normal', text: '床前', start: 0, end: 2 },
-  { type: 'highlight', text: '明月', start: 2, end: 4 },
-  { type: 'normal', text: '光，疑似', start: 4, end: 8 },
-  { type: 'highlight', text: '地上', start: 8, end: 10 },
-  { type: 'normal', text: '霜', start: 10, end: 11 } ]
+  // result1
+  [
+    { type: 'normal', text: '床前', start: 0, end: 2 },
+    { type: 'highlight', text: '明月', start: 2, end: 4 },
+    { type: 'normal', text: '光，疑似', start: 4, end: 8 },
+    { type: 'highlight', text: '地上', start: 8, end: 10 },
+    { type: 'normal', text: '霜', start: 10, end: 11 }
+  ]
+
+  // result2
+  [
+    { type: 'normal', text: '举头望', start: 0, end: 3 },
+    { type: 'highlight', text: '明月', start: 3, end: 5 },
+    { type: 'normal', text: '，低头思故乡', start: 5, end: 11 }
+  ]
 ```
