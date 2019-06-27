@@ -7,11 +7,9 @@ npm install extract-highlight-text --save
 ### 使用
 ```js
 import sliceTextByKeywords from 'extract-highlight-text';
-const title = '床前明月光，疑似地上霜';
-const keywords = ['明月', '地上'];
 const result = sliceTextByKeywords({
-    text: title,
-    keywords: keywords
+    text: '床前明月光，疑似地上霜',
+    keywords: ['明月', '地上']
 });
 ```
 
@@ -30,19 +28,18 @@ const result = sliceTextByKeywords({
 
 ```js
 import sliceTextByKeywords, { buildTrieTree } from 'extract-highlight-text';
-const title1 = '床前明月光，疑似地上霜';
-const title2 = '举头望明月，低头思故乡';
+const title1 = ;
 const keywords = ['明月', '地上'];
 const trieTreeRoot = buildTrieTree(keywords);
 
 const result1 = sliceTextByKeywords({
-    text: title1,
+    text: '床前明月光，疑似地上霜',
     keywords: keywords,
     trieTreeRoot: trieTreeRoot
 });
 
 const result2 = sliceTextByKeywords({
-    text: title2,
+    text: '举头望明月，低头思故乡',
     keywords: keywords,
     trieTreeRoot: trieTreeRoot
 });
