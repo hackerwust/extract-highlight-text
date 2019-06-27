@@ -1,6 +1,28 @@
 import sliceTextByKeywords from '../src';
 import test, { ExecutionContext } from 'ava';
 
+test('match lazy match', (t: ExecutionContext) => {
+    const text = 'I have a Apple';
+    t.deepEqual(
+        sliceTextByKeywords({
+            text,
+            enableLazyMatch: true,
+            keywords: ['apple']
+        }),
+        [{
+            type: 'normal',
+            text: 'I have a ',
+            start: 0,
+            end: 9
+        }, {
+            type: 'highlight',
+            text: 'Apple',
+            start: 9,
+            end: text.length
+        }]
+    );
+});
+
 test('match empty keyword', (t: ExecutionContext) => {
     const text = '今晚打老虎';
     t.deepEqual(

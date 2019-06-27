@@ -4,23 +4,37 @@
 ### 安装
 npm install extract-highlight-text --save
 
+### 特性
+1. 支持模糊匹配(忽略大小写)
+2. 对于比较庞大的目标字符串拥有良好的性能
+
 ### 使用
 ```js
 import sliceTextByKeywords from 'extract-highlight-text';
+const keywords = ['Apple'];
 const result = sliceTextByKeywords({
-    text: '床前明月光，疑似地上霜',
-    keywords: ['明月', '地上']
+    text: 'I have a Apple',
+    // 开启模糊匹配
+    enableLazyMatch: true,
+    keywords: keywords
 });
 ```
 
 以上代码会输出如下内容， type为`highlight`表示匹配成功的子串
 ```js
+  // result
   [
-    { type: 'normal', text: '床前', start: 0, end: 2 },
-    { type: 'highlight', text: '明月', start: 2, end: 4 },
-    { type: 'normal', text: '光，疑似', start: 4, end: 8 },
-    { type: 'highlight', text: '地上', start: 8, end: 10 },
-    { type: 'normal', text: '霜', start: 10, end: 11 }
+    {
+      type: 'normal',
+      text: 'I have a ',
+      start: 0,
+      end: 9
+    }, {
+      type: 'highlight',
+      text: 'Apple',
+      start: 9,
+      end: 14
+    }
   ]
 ```
 
@@ -28,7 +42,6 @@ const result = sliceTextByKeywords({
 
 ```js
 import sliceTextByKeywords, { buildTrieTree } from 'extract-highlight-text';
-const title1 = ;
 const keywords = ['明月', '地上'];
 const trieTreeRoot = buildTrieTree(keywords);
 

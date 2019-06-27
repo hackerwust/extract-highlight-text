@@ -38,10 +38,15 @@ function isEmptyTrieNode (node: TrieNode) {
     return true;
 }
 
-export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot }: {
+export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, enableLazyMatch = false }: {
+    // 原始文本串
     text: string;
+    // 需要匹配的关键字
     keywords: string[];
+    // 关键字字典树
     trieTreeRoot?: TrieNode;
+    // 是否开启模糊匹配，忽略大小写, 默认关闭
+    enableLazyMatch?: boolean;
 }): TextSliceItem[] {
     if (!text) {
         return [];
@@ -77,9 +82,23 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot }: {
                 if (isEmptyTrieNode(curNode)) {
                     matched = true;
                 }
-            } else {
-                break;
+                continue;
             }
+            // 进行模糊匹配
+            if (enableLazyMatch) {
+                const upperChar = char.toLowerCase();
+                const lowerChar = char.toLowerCase();
+                if (curNode.hasOwnProperty(upperChar) || curNode.hasOwnProperty(lowerChar)) {
+                    end++;
+                    curNode = curNode[upperChar] || curNode[lowerChar];
+                    matchText += char;
+                    if (isEmptyTrieNode(curNode)) {
+                        matched = true;
+                    }
+                    continue;
+                }
+            }
+            break;
         }
 
         if (matched) {
