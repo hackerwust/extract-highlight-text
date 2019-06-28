@@ -1,23 +1,82 @@
 import sliceTextByKeywords from '../src';
 import test, { ExecutionContext } from 'ava';
 
-test('match lazy match', (t: ExecutionContext) => {
-    const text = 'I have a Apple';
+test ('lazy match ["tt", "tttt"] include tt', (t: ExecutionContext) => {
+    const text = '陪U自然拼读Letter Bb';
     t.deepEqual(
         sliceTextByKeywords({
             text,
             enableLazyMatch: true,
-            keywords: ['apple']
+            keywords: ["tt", "tttt"]
         }),
         [{
             type: 'normal',
-            text: 'I have a ',
+            text: '陪U自然拼读Le',
             start: 0,
-            end: 9
+            end: 8
         }, {
             type: 'highlight',
-            text: 'Apple',
-            start: 9,
+            text: 'tt',
+            start: 8,
+            end: 10
+        }, {
+            type: 'normal',
+            text: 'er Bb',
+            start: 10,
+            end: text.length
+        }]
+    );
+});
+
+test ('lazy match ["tttt", "tt"] include tt', (t: ExecutionContext) => {
+    const text = '陪U自然拼读Letter Bb';
+    t.deepEqual(
+        sliceTextByKeywords({
+            text,
+            enableLazyMatch: true,
+            keywords: ["tttt", "tt"]
+        }),
+        [{
+            type: 'normal',
+            text: '陪U自然拼读Le',
+            start: 0,
+            end: 8
+        }, {
+            type: 'highlight',
+            text: 'tt',
+            start: 8,
+            end: 10
+        }, {
+            type: 'normal',
+            text: 'er Bb',
+            start: 10,
+            end: text.length
+        }]
+    );
+});
+
+test ('lazy match ["tttt", "tt"] include ttt', (t: ExecutionContext) => {
+    const text = '陪U自然拼读Lettter Bb';
+    t.deepEqual(
+        sliceTextByKeywords({
+            text,
+            enableLazyMatch: true,
+            keywords: ["tttt", "tt"]
+        }),
+        [{
+            type: 'normal',
+            text: '陪U自然拼读Le',
+            start: 0,
+            end: 8
+        }, {
+            type: 'highlight',
+            text: 'tt',
+            start: 8,
+            end: 10
+        }, {
+            type: 'normal',
+            text: 'ter Bb',
+            start: 10,
             end: text.length
         }]
     );

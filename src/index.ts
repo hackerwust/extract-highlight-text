@@ -1,5 +1,5 @@
 export interface TrieNode {
-    [key: string]: TrieNode;
+    [key: string]: TrieNode | boolean | undefined;
 }
 
 export interface TextSliceItem {
@@ -23,19 +23,13 @@ export function buildTrieTree (keywords: string[]): TrieNode {
             if (!curNode.hasOwnProperty(char)) {
                 curNode[char] = {};
             }
-            curNode = curNode[char];
+            curNode = curNode[char] as TrieNode;
         }
+        curNode.isLeaf = true;
         // 恢复curNode为rootNode(根节点)，准备开始扫描下一个keyword
         curNode = rootNode;
     }
     return rootNode;
-}
-
-function isEmptyTrieNode (node: TrieNode) {
-    for (let i in node) {
-        return false;
-    }
-    return true;
 }
 
 export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, enableLazyMatch = false }: {
@@ -72,14 +66,14 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
         // 是否命中keyword字符串
         let matched = false;
         // 匹配到的keyword
-        let matchText = '';
+        let matchecEndPos = end;
         while (end < textLen) {
             const char = text[end];
             if (curNode.hasOwnProperty(char)) {
                 end++;
-                curNode = curNode[char];
-                matchText += char;
-                if (isEmptyTrieNode(curNode)) {
+                curNode = curNode[char] as TrieNode;
+                if (curNode.isLeaf) {
+                    matchecEndPos = end;
                     matched = true;
                 }
                 continue;
@@ -90,9 +84,9 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
                 const lowerChar = char.toLowerCase();
                 if (curNode.hasOwnProperty(upperChar) || curNode.hasOwnProperty(lowerChar)) {
                     end++;
-                    curNode = curNode[upperChar] || curNode[lowerChar];
-                    matchText += char;
-                    if (isEmptyTrieNode(curNode)) {
+                    curNode = (curNode[upperChar] || curNode[lowerChar]) as TrieNode;
+                    if (curNode.isLeaf) {
+                        matchecEndPos = end;
                         matched = true;
                     }
                     continue;
@@ -111,14 +105,14 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
                     end: start
                 });
             }
-            lastMatchEnd = end;
+            lastMatchEnd = matchecEndPos;
             textTiles.push({
                 type: 'highlight',
-                text: matchText,
+                text: text.substring(start, matchecEndPos),
                 start: start,
-                end: end
+                end: matchecEndPos
             });
-            start = end;
+            start = matchecEndPos;
         } else {
             start++;
         }
