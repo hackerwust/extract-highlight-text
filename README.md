@@ -7,13 +7,14 @@ npm install extract-highlight-text --save
 ### 特性
 1. 支持模糊匹配(忽略大小写)
 2. 对于比较庞大的目标字符串拥有良好的性能
+3. 完善的单元测试
 
 ### 使用
 ```js
 import sliceTextByKeywords from 'extract-highlight-text';
-const keywords = ['Apple'];
+const keywords = ['apple', 'apples'];
 const result = sliceTextByKeywords({
-    text: 'I have a Apple',
+    text: 'I have many Apples',
     // 开启模糊匹配
     enableLazyMatch: true,
     keywords: keywords
@@ -24,16 +25,16 @@ const result = sliceTextByKeywords({
 ```js
   // result
   [
-    {
-      type: 'normal',
-      text: 'I have a ',
+    { type: 'normal',
+      text: 'I have many ',
       start: 0,
-      end: 9
-    }, {
+      end: 12
+    },
+    {
       type: 'highlight',
-      text: 'Apple',
-      start: 9,
-      end: 14
+      text: 'Apples',
+      start: 12,
+      end: 18
     }
   ]
 ```
