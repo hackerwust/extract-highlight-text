@@ -1,6 +1,6 @@
 {
   "name": "extract-highlight-text",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "高性能多文本关键字匹配模块，用于前端文本高亮",
   "main": "lib/index.js",
   "module": "esm/index.js",
