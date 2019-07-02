@@ -65,15 +65,15 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
         let curNode: TrieNode = rootNode;
         // 是否命中keyword字符串
         let matched = false;
-        // 匹配到的keyword
-        let matchecEndPos = end;
+        // 匹配成功时的结束下标
+        let matchedEndPos = end;
         while (end < textLen) {
             const char = text[end];
             if (curNode.hasOwnProperty(char)) {
                 end++;
                 curNode = curNode[char] as TrieNode;
                 if (curNode.isLeaf) {
-                    matchecEndPos = end;
+                    matchedEndPos = end;
                     matched = true;
                 }
                 continue;
@@ -86,7 +86,7 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
                     end++;
                     curNode = (curNode[upperChar] || curNode[lowerChar]) as TrieNode;
                     if (curNode.isLeaf) {
-                        matchecEndPos = end;
+                        matchedEndPos = end;
                         matched = true;
                     }
                     continue;
@@ -105,14 +105,14 @@ export default function sliceTextByKeywords ({ text, keywords, trieTreeRoot, ena
                     end: start
                 });
             }
-            lastMatchEnd = matchecEndPos;
+            lastMatchEnd = matchedEndPos;
             textTiles.push({
                 type: 'highlight',
-                text: text.substring(start, matchecEndPos),
+                text: text.substring(start, matchedEndPos),
                 start: start,
-                end: matchecEndPos
+                end: matchedEndPos
             });
-            start = matchecEndPos;
+            start = matchedEndPos;
         } else {
             start++;
         }
