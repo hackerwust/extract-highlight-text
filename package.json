@@ -10,6 +10,8 @@
     "build": "run-s clean && run-p build:cjs build:esm",
     "build:cjs": "tsc --outDir lib --module commonjs --declaration",
     "build:esm": "tsc --outDir esm --module esnext --declaration",
+    "babel_build:cjs": "tsc --emitDeclarationOnly --outDir lib && BUILD_TARGET=cjs babel src --out-dir lib --extensions \".ts,.tsx\"",
+    "babel_build:esm": "tsc --emitDeclarationOnly --outDir esm && BUILD_TARGET=esm babel src --out-dir esm --extensions \".ts,.tsx\"",
     "clean": "rm -rf lib esm build temp dist .cache",
     "prepublishOnly": "npm run build"
   },
@@ -55,10 +57,15 @@
   },
   "homepage": "https://github.com/hackerwust/extract-highlight-text#readme",
   "dependencies": {
+    "core-js": "^3.1.4",
     "tslib": "^1.9.3",
     "typescript": "^3.3.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-typescript": "^7.3.3",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
     "ava": "^2.1.0",
